@@ -1,0 +1,9 @@
+ae:
+  conv1: 8
+  conv2: 16
+  conv3: 32
+  latent_dim: 128
+  enc_feature_maps: 16
+  dec_feature_maps: 16
+  pool: 2
+  n_channels: 3

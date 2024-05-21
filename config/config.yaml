@@ -1,0 +1,36 @@
+defaults:
+  - _self_
+  - dataset_info
+  - ae
+
+currentDir: ${hydra:runtime.cwd}
+
+seed: 42
+checkpoint: null
+
+dataset: 
+  name: cifar10
+  path: ./data
+  resize: 128
+
+train:
+  batch_size: 32
+  max_epochs: 30
+  lr: 5e-5
+  weight_decay: 5e-4
+  accelerator: cpu
+  devices: 1
+  device: "cuda"
+  save_path: ./models
+  num_workers: 1
+  log_every_n_steps: 100
+  patience: 5
+
+log:
+  path: ./logs
+  wandb: True
+
+wandb:
+  project: zero-shot
+  entity: marcoparola
+
