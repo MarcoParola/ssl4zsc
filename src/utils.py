@@ -139,6 +139,22 @@ def load_dataset(dataset, data_dir, resize=256, val_split=0.2, test_split=0.2):
 
     return train, val, test
 
+
+def load_features(data_dir):
+    features, labels = None, None
+
+    features = []
+    labels = []
+    for file in os.listdir(data_dir):
+        if file.startswith('features'):
+            features.append(torch.load(os.path.join(data_dir, file)))
+        elif file.startswith('labels'):
+            labels.append(torch.load(os.path.join(data_dir, file)))
+
+    features = torch.cat(features, dim=0)
+    labels = torch.cat(labels, dim=0)
+    return features, labels
+
     
 
 if __name__ == "__main__":

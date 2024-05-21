@@ -7,6 +7,7 @@ currentDir: ${hydra:runtime.cwd}
 
 seed: 42
 checkpoint: null
+model: cae
 
 dataset: 
   name: cifar10
@@ -15,7 +16,7 @@ dataset:
 
 train:
   batch_size: 32
-  max_epochs: 30
+  max_epochs: 20
   lr: 5e-5
   weight_decay: 5e-4
   accelerator: cpu
@@ -31,6 +32,6 @@ log:
   wandb: True
 
 wandb:
-  project: zero-shot
+  project: ssl4zsc
   entity: marcoparola
 

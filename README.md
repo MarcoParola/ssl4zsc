@@ -29,21 +29,37 @@ wandb login
 ```
 
 ## Usage
+
+The experiments are organized in a three-step workflow:
+- Training SS architectures
+- Extract features using a previously trained SS model
+- Run clustering algorithms and evaluate cluster results
+
+Additional utility python scripts can be found in `./scripts/`
+
+
+### 1. Training
 A pretrained model fine-tuning can be run using `train.py` and specifying:
-- the `dataset.name` param from the following list: `cifar10`, `cifar100`, `caltech101`, `imagenet`, `oxford-iiit-pet`, `svhn`, `mnist`, `fashionmnist`
+- `model` param from the following list: `cae` TODO future architectures could be clip or a transformer-based model
+- `dataset.name` param from the following list: `cifar10`, `cifar100`, `caltech101`, `imagenet`, `oxford-iiit-pet`, `svhn`, `mnist`, `fashionmnist`
  
 
 ```sh
 python train.py dataset.name=cifar10
 ```
 
-After trained a model, you can reload it and use it to extract features by using `extract_features.py`. Specify the following params:
-- the `dataset.name` param from the following list: `cifar10`, `cifar100`, `caltech101`, `imagenet`, `oxford-iiit-pet`, `svhn`, `mnist`, `fashionmnist`
-- the `checkpoint` param by choosing among the pretrained model checkpoints in the output folder. Pleas note, in the following example the `checkpoint` param is valued according the windows path format.
+### 2. Exctract features
+After trained a model, you can reload it and use it to extract features by using `extract_features.py`. 
+Features are saved in a directory called `./data/{model param}_{dataset name}/`
+Specify the following params:
+- `model` param from the following list: `cae`
+- `dataset.name` param from the following list: `cifar10`, `cifar100`, `caltech101`, `imagenet`, `oxford-iiit-pet`, `svhn`, `mnist`, `fashionmnist`
+- `checkpoint` param by choosing among the pretrained model checkpoints in the output folder. 
 
 
 
 ```sh
-python extract_features.py dataset.name=cifar10 checkpoint=...
+python extract_features.py dataset.name=cifar10 checkpoint=outputs\2024-05-21\11-28-22\lightning_logs\8315z0fs\checkpoints\epoch\=19-step\=25000.ckpt
 ```
 
+### 3. Clustering and evaluation

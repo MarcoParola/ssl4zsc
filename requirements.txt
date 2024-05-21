@@ -1,6 +1,5 @@
 hydra-core
 matplotlib
-pytorch-sidu
 torch
 torchvision
 gdown
@@ -10,4 +9,3 @@ omegaconf
 flatdict
 scipy
 scikit-learn
-grad-cam
