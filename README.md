@@ -35,7 +35,9 @@ The experiments are organized in a three-step workflow:
 - Extract features using a previously trained SS model
 - Run clustering algorithms and evaluate cluster results
 
-Additional utility python scripts can be found in `./scripts/`
+Additional utility python scripts can be found in `./scripts/`. 
+The main ones are:
+- `generate_txt_embeddings.py` to precompute the text class description embeddings.
 
 
 ### 1. Training

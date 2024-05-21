@@ -4,6 +4,8 @@ import numpy as np
 import os
 from pytorch_lightning.callbacks.early_stopping import EarlyStopping
 from pytorch_lightning.callbacks import ModelCheckpoint
+from src.models.cae import Autoencoder
+from src.models.vcae import VariationalAutoencoder
 
 
 def get_save_model_callback(save_path):
@@ -147,13 +149,35 @@ def load_features(data_dir):
     labels = []
     for file in os.listdir(data_dir):
         if file.startswith('features'):
-            features.append(torch.load(os.path.join(data_dir, file)))
+            features.append(torch.load(os.path.join(data_dir, file)).cpu().numpy())
         elif file.startswith('labels'):
-            labels.append(torch.load(os.path.join(data_dir, file)))
+            labels.append(torch.load(os.path.join(data_dir, file)).cpu().numpy())
 
-    features = torch.cat(features, dim=0)
-    labels = torch.cat(labels, dim=0)
+    features = np.array(features)
+    labels = np.array(labels)
+
     return features, labels
+
+
+def get_model(cfg):
+    model_name = cfg.model
+    model = None
+    if model_name == 'cae':
+        model = Autoencoder(
+            ae_params=cfg.ae,
+            lr=cfg.train.lr,
+            max_epochs=cfg.train.max_epochs
+        )
+    elif model_name == 'vcae':
+        model = VariationalAutoencoder(
+            ae_params=cfg.ae,
+            lr=cfg.train.lr,
+            max_epochs=cfg.train.max_epochs
+        )
+    else:
+        raise ValueError(f'Unknown model: {model_name}')
+    
+    return model
 
     
 

@@ -3,9 +3,8 @@ import torch
 import pytorch_lightning as pl
 import os
 
-from src.utils import load_dataset, get_early_stopping, get_save_model_callback
+from src.utils import load_dataset, get_early_stopping, get_save_model_callback, get_model
 from src.datasets.datamodule import ZeroShotDataModule
-from src.models.ae import Autoencoder
 from src.log import get_loggers
 
 
@@ -40,15 +39,9 @@ def main(cfg):
         test=test,
         batch_size=cfg.train.batch_size
     )
-    
 
-    model = Autoencoder(
-        ae_params=cfg.ae,
-        lr=cfg.train.lr,
-        max_epochs=cfg.train.max_epochs
-    )
+    model = get_model(cfg)
 
-    
     trainer = pl.Trainer(
         max_epochs=cfg.train.max_epochs,
         devices=cfg.train.devices,

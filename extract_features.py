@@ -4,9 +4,8 @@ import pytorch_lightning as pl
 import os
 import tqdm
 
-from src.utils import load_dataset, get_early_stopping, get_save_model_callback
+from src.utils import load_dataset, get_early_stopping, get_save_model_callback, get_model
 from src.datasets.datamodule import ZeroShotDataModule
-from src.models.ae import Autoencoder
 from src.log import get_loggers
 
 
@@ -17,14 +16,9 @@ def main(cfg):
     loggers = None
 
     # instantiate the model and load the weights
-    model = Autoencoder(
-        ae_params=cfg.ae,
-        lr=cfg.train.lr,
-        max_epochs=cfg.train.max_epochs
-    )
+    model = get_model(cfg)
     model_path = os.path.join(cfg.currentDir, cfg.checkpoint)
     model.load_state_dict(torch.load(model_path)['state_dict'])
-
 
     # load test dataset
     data_dir = os.path.join(cfg.currentDir, cfg.dataset.path)
@@ -37,11 +31,8 @@ def main(cfg):
         test=test,
         batch_size=1 # batch size is 1 to extract features one by one
     )
+    dataloader = datamodule.test_dataloader() # get test dataloader from datamodule
 
-    dataloader = datamodule.test_dataloader()
-
-
-   
     trainer = pl.Trainer(
         max_epochs=cfg.train.max_epochs,
         devices=cfg.train.devices,
@@ -49,20 +40,15 @@ def main(cfg):
         logger=loggers,
         log_every_n_steps=cfg.train.log_every_n_steps,
     )
-
     #trainer.test(model, dataloader)
 
-    
     device = torch.device(cfg.train.device)
-
-
     model.eval()
     model.to(device)
 
     # save the features: current directory + data directory + subdirectory (model name _ dataset name) 
     features_path = os.path.join(cfg.currentDir, cfg.dataset.path, cfg.model + '_' + cfg.dataset.name)
     os.makedirs(features_path, exist_ok=True)
-    print('Saving features:', features_path)
 
     # for with enumerate and tqdm
     for j, batch in enumerate(tqdm.tqdm(dataloader)):
@@ -80,10 +66,5 @@ def main(cfg):
             torch.save(actual, os.path.join(features_path, f'labels_{j}.pt'))
         
 
-    
-    
-
-
 if __name__ == '__main__':
-    
     main()
