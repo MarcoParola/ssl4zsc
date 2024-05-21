@@ -5,7 +5,7 @@ import os
 
 from src.utils import load_dataset, get_early_stopping, get_save_model_callback
 from src.datasets.datamodule import ZeroShotDataModule
-from src.models.ae import AutoencoderModule
+from src.models.ae import Autoencoder
 from src.log import get_loggers
 
 
@@ -42,9 +42,8 @@ def main(cfg):
     )
     
 
-    model = AutoencoderModule(
-        ae_param=cfg.ae,
-        img_size=cfg.dataset.resize,
+    model = Autoencoder(
+        ae_params=cfg.ae,
         lr=cfg.train.lr,
         max_epochs=cfg.train.max_epochs
     )
@@ -74,7 +73,7 @@ def main(cfg):
         ax[1].imshow(y_hat[i].detach().permute(1, 2, 0))
         ax[1].set_title("Reconstructed")
         ax[1].axis("off")
-        plt.show()
+        plt.savefig(f"reconstructed_{i}.png")
 
     # Test
     trainer.test(model, datamodule=datamodule)
