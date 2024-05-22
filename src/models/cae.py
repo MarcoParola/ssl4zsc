@@ -71,7 +71,9 @@ class Autoencoder(pl.LightningModule):
             nn.ReLU(True),
             # input (nfd) x 64 x 64
             nn.ConvTranspose2d(ae_params.dec_feature_maps, ae_params.n_channels, 4, 2, 1, bias=False),
-            nn.Tanh()
+            # sigmoid instead of tanh for stability
+            nn.Sigmoid()
+            #nn.Tanh()
             # output (nc) x 128 x 128
         )
 

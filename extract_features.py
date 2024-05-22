@@ -17,8 +17,9 @@ def main(cfg):
 
     # instantiate the model and load the weights
     model = get_model(cfg)
-    model_path = os.path.join(cfg.currentDir, cfg.checkpoint)
-    model.load_state_dict(torch.load(model_path)['state_dict'])
+    if cfg.model in ['cae', 'vcae']:
+        model_path = os.path.join(cfg.currentDir, cfg.checkpoint)
+        model.load_state_dict(torch.load(model_path)['state_dict'])
 
     # load test dataset
     data_dir = os.path.join(cfg.currentDir, cfg.dataset.path)
@@ -50,8 +51,8 @@ def main(cfg):
     features_path = os.path.join(cfg.currentDir, cfg.dataset.path, cfg.model + '_' + cfg.dataset.name)
     os.makedirs(features_path, exist_ok=True)
 
-    # for with enumerate and tqdm
-    for j, batch in enumerate(tqdm.tqdm(dataloader)):
+    # for with enumerate and tqdm with message
+    for j, batch in enumerate(tqdm.tqdm(dataloader, desc='Extracting features')):
         images, labels, meta = batch
         images = images.to(device)
         labels = labels.to(device)
@@ -61,8 +62,12 @@ def main(cfg):
             features = features.squeeze()
             actual = meta['label']
 
+            # convert tensor with one element to int
+            lbl = actual.item()
+
+
             # save the features and labels
-            torch.save(features, os.path.join(features_path, f'features_{j}.pt'))
+            torch.save(features, os.path.join(features_path, f'features_{j}-{lbl}.pt'))
             torch.save(actual, os.path.join(features_path, f'labels_{j}.pt'))
         
 
