@@ -6,6 +6,8 @@ from pytorch_lightning.callbacks.early_stopping import EarlyStopping
 from pytorch_lightning.callbacks import ModelCheckpoint
 from src.models.cae import Autoencoder
 from src.models.vcae import VariationalAutoencoder
+from src.models.dino import Dino
+from src.models.vitmae import VitMAE
 
 
 def get_save_model_callback(save_path):
@@ -150,8 +152,10 @@ def load_features(data_dir):
     for file in os.listdir(data_dir):
         if file.startswith('features'):
             features.append(torch.load(os.path.join(data_dir, file)).cpu().numpy())
-        elif file.startswith('labels'):
-            labels.append(torch.load(os.path.join(data_dir, file)).cpu().numpy())
+            label = file.split('-')[1].split('.')[0]
+            labels.append(int(label))
+        #elif file.startswith('labels'):
+        #    labels.append(torch.load(os.path.join(data_dir, file)).cpu().numpy())
 
     features = np.array(features)
     labels = np.array(labels)
@@ -174,6 +178,11 @@ def get_model(cfg):
             lr=cfg.train.lr,
             max_epochs=cfg.train.max_epochs
         )
+    elif model_name == 'dino':
+        model = Dino()
+    elif model_name == 'vitmae':
+        model = VitMAE()
+
     else:
         raise ValueError(f'Unknown model: {model_name}')
     
