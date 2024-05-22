@@ -1,6 +1,9 @@
 # **ssl4zsc**: Self-Supervised Learning for Zero-Shot Clustering  
 
-Repository for some DL experiments about  
+Repository for DL experiments on self-supervised learning for generating image embeddings and clustering evaluation.
+
+![pca-mnist-dino](https://github.com/MarcoParola/ssl4zsc/assets/32603898/2f8828da-437d-4e3b-a6e6-393de7627dcc)![tsne-mnist-dino](https://github.com/MarcoParola/ssl4zsc/assets/32603898/74fb8575-d0b4-477e-9653-339ef17a0814)
+
 
 The main actions you can do are:
 - train a DL model using `train.py` script
