@@ -67,7 +67,7 @@ python train.py model=vcae dataset.name=mnist
 ```
 
 ### 2. Exctract features
-After trained a model, you can reload it and use it to extract features by using `extract_features.py`. 
+After training a model, you can reload it and use it to extract features using `extract_features.py`. 
 Features are saved in a directory called `./data/{model param}_{dataset name}/`
 Specify the following params:
 - `model` param from the following list: `cae`, `vcae`, `dino`, `vitmae`
@@ -80,3 +80,7 @@ python extract_features.py dataset.name=cifar10 checkpoint=outputs\2024-05-21\11
 ```
 
 ### 3. Clustering and evaluation
+After extracting features, you can reload it and use it to cluster data using `clustering.py`. 
+Specify the following parameters:
+- `model` param from the following list: `cae`, `vcae`, `dino`, `vitmae`
+- `dataset.name` param from the following list: `cifar10`, `cifar100`, `caltech101`, `oxford-iiit-pet`, `svhn`, `mnist`, `fashionmnist`
